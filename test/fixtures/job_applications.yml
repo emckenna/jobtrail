@@ -1,0 +1,41 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  company_name: TechCorp
+  job_title: Senior Software Engineer
+  application_link: https://example.com/job/1
+  application_date: <%= 30.days.ago.to_date %>
+  current_status: screening
+  status_updated_at: <%= 25.days.ago %>
+  salary_range_min: 120000
+  salary_range_max: 160000
+  contact_name: Jane Smith
+  contact_email: jane@techcorp.com
+  notes: Great company culture, interesting tech stack
+  follow_up_date: <%= 5.days.from_now.to_date %>
+
+two:
+  company_name: StartupXYZ
+  job_title: Full Stack Developer
+  application_link: https://example.com/job/2
+  application_date: <%= 45.days.ago.to_date %>
+  current_status: rejected
+  rejected_at_stage: screening
+  status_updated_at: <%= 40.days.ago %>
+  salary_range_min: 100000
+  salary_range_max: 140000
+  notes: Rejected after initial screening
+
+three:
+  company_name: BigTech Inc
+  job_title: Engineering Manager
+  application_link: https://example.com/job/3
+  application_date: <%= 15.days.ago.to_date %>
+  current_status: interviewing
+  status_updated_at: <%= 10.days.ago %>
+  salary_range_min: 150000
+  salary_range_max: 200000
+  contact_name: Bob Johnson
+  contact_email: bob@bigtech.com
+  notes: Multiple rounds of interviews scheduled
+  follow_up_date: <%= 3.days.from_now.to_date %>
