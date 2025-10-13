@@ -1,0 +1,117 @@
+<%= render layout: "shared/page_wrapper", locals: { container_class: "container mx-auto px-4 py-8 max-w-4xl" } do %>
+  <div class="mb-6 flex justify-between items-center">
+    <h1 class="text-3xl font-bold text-gray-900"><%= @job_application.company_name %></h1>
+    <div class="space-x-2">
+      <%= link_to "Edit", edit_job_application_path(@job_application), class: "bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg font-semibold" %>
+      <%= link_to "Back to List", job_applications_path, class: "bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-semibold" %>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+      <h2 class="text-xl font-semibold"><%= @job_application.job_title %></h2>
+    </div>
+
+    <div class="p-6 space-y-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Application Date</h3>
+          <p class="text-lg"><%= @job_application.application_date.strftime("%B %d, %Y") %></p>
+        </div>
+
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Current Status</h3>
+          <span class="px-3 py-1 inline-flex text-sm font-semibold rounded-full
+            <%= case @job_application.current_status
+                when 'applied' then 'bg-blue-100 text-blue-800'
+                when 'screening' then 'bg-yellow-100 text-yellow-800'
+                when 'assessment' then 'bg-purple-100 text-purple-800'
+                when 'interviewing' then 'bg-cyan-100 text-cyan-800'
+                when 'offer' then 'bg-green-100 text-green-800'
+                when 'rejected' then 'bg-red-100 text-red-800'
+                when 'closed' then 'bg-gray-100 text-gray-800'
+                end %>">
+            <%= @job_application.current_status.titleize %>
+          </span>
+        </div>
+      </div>
+
+      <% if @job_application.rejected_at_stage.present? %>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Rejected at Stage</h3>
+          <p class="text-lg"><%= @job_application.rejected_at_stage.to_s.gsub('rejected_at_', '').titleize %></p>
+        </div>
+      <% end %>
+
+      <div>
+        <h3 class="text-sm font-medium text-gray-500 mb-1">Days Since Application</h3>
+        <p class="text-lg"><%= @job_application.days_since_application %> days</p>
+      </div>
+
+      <% if @job_application.application_link.present? %>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Application Link</h3>
+          <p class="text-lg">
+            <%= link_to @job_application.application_link, @job_application.application_link, target: "_blank", class: "text-teal-600 hover:underline" %>
+          </p>
+        </div>
+      <% end %>
+
+      <% if @job_application.salary_range_min.present? || @job_application.salary_range_max.present? %>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Salary Range</h3>
+          <p class="text-lg"><%= @job_application.salary_range_display %></p>
+        </div>
+      <% end %>
+
+      <% if @job_application.contact_name.present? || @job_application.contact_email.present? %>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <% if @job_application.contact_name.present? %>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Contact Name</h3>
+              <p class="text-lg"><%= @job_application.contact_name %></p>
+            </div>
+          <% end %>
+
+          <% if @job_application.contact_email.present? %>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500 mb-1">Contact Email</h3>
+              <p class="text-lg">
+                <%= mail_to @job_application.contact_email, @job_application.contact_email, class: "text-teal-600 hover:underline" %>
+              </p>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if @job_application.follow_up_date.present? %>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Follow-up Date</h3>
+          <p class="text-lg <%= @job_application.follow_up_overdue? ? 'text-red-600 font-semibold' : '' %>">
+            <%= @job_application.follow_up_date.strftime("%B %d, %Y") %>
+            <% if @job_application.follow_up_overdue? %>
+              <span class="text-sm">(Overdue)</span>
+            <% end %>
+          </p>
+        </div>
+      <% end %>
+
+      <% if @job_application.notes.present? %>
+        <div>
+          <h3 class="text-sm font-medium text-gray-500 mb-1">Notes</h3>
+          <p class="text-gray-700 whitespace-pre-wrap"><%= @job_application.notes %></p>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-between items-center">
+      <div class="text-sm text-gray-500">
+        <p>Created: <%= @job_application.created_at.strftime("%B %d, %Y at %l:%M %p") %></p>
+        <% if @job_application.status_updated_at.present? %>
+          <p>Status Updated: <%= @job_application.status_updated_at.strftime("%B %d, %Y at %l:%M %p") %></p>
+        <% end %>
+      </div>
+      <%= button_to "Delete Application", job_application_path(@job_application), method: :delete, data: { confirm: "Are you sure you want to delete this application?" }, class: "bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-semibold" %>
+    </div>
+  </div>
+<% end %>

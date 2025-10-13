@@ -36,6 +36,7 @@ class JobApplication < ApplicationRecord
   scope :by_company, ->(company) { where("company_name ILIKE ?", "%#{company}%") }
 
   # Callbacks
+  before_validation :set_default_follow_up_date, on: :create
   before_save :update_status_timestamp, if: :current_status_changed?
 
   # Instance methods
@@ -83,6 +84,10 @@ class JobApplication < ApplicationRecord
   end
 
   private
+
+  def set_default_follow_up_date
+    self.follow_up_date ||= (application_date || Date.today) + 7.days
+  end
 
   def update_status_timestamp
     self.status_updated_at = Time.current
