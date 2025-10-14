@@ -3,7 +3,7 @@ class JobApplicationsController < ApplicationController
 
   # GET /job_applications
   def index
-    @job_applications = JobApplication.recent
+    @pagy, @job_applications = pagy(JobApplication.recent, limit: 25)
   end
 
   # GET /job_applications/1
@@ -12,7 +12,10 @@ class JobApplicationsController < ApplicationController
 
   # GET /job_applications/new
   def new
-    @job_application = JobApplication.new
+    @job_application = JobApplication.new(
+      application_date: Date.today,
+      follow_up_date: Date.today + 7.days
+    )
   end
 
   # GET /job_applications/1/edit

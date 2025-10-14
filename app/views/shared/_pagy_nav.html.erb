@@ -1,0 +1,43 @@
+<%# Tailwind-styled pagination component for Pagy %>
+<% if pagy.pages > 1 %>
+  <nav class="flex items-center justify-between border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 sm:px-6 rounded-b-lg" aria-label="Pagination">
+    <div class="hidden sm:block">
+      <p class="text-sm text-gray-700 dark:text-gray-300">
+        Showing
+        <span class="font-medium"><%= pagy.from %></span>
+        to
+        <span class="font-medium"><%= pagy.to %></span>
+        of
+        <span class="font-medium"><%= pagy.count %></span>
+        results
+      </p>
+    </div>
+    <div class="flex flex-1 justify-between sm:justify-end">
+      <% if pagy.prev %>
+        <%= link_to "Previous", pagy_url_for(pagy, pagy.prev), class: "relative inline-flex items-center rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 focus-visible:outline-offset-0" %>
+      <% else %>
+        <span class="relative inline-flex items-center rounded-md bg-gray-100 dark:bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 cursor-not-allowed">Previous</span>
+      <% end %>
+
+      <div class="hidden md:flex md:gap-1 mx-4">
+        <% pagy.series.each do |item| %>
+          <% if item.is_a?(Integer) %>
+            <% if item == pagy.page %>
+              <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-white bg-teal-600 focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-teal-600 rounded-md"><%= item %></span>
+            <% else %>
+              <%= link_to item, pagy_url_for(pagy, item), class: "relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 focus:z-20 focus:outline-offset-0 rounded-md" %>
+            <% end %>
+          <% elsif item == :gap %>
+            <span class="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-400">...</span>
+          <% end %>
+        <% end %>
+      </div>
+
+      <% if pagy.next %>
+        <%= link_to "Next", pagy_url_for(pagy, pagy.next), class: "relative ml-3 inline-flex items-center rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-gray-100 ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 focus-visible:outline-offset-0" %>
+      <% else %>
+        <span class="relative ml-3 inline-flex items-center rounded-md bg-gray-100 dark:bg-gray-800 px-3 py-2 text-sm font-semibold text-gray-400 dark:text-gray-500 ring-1 ring-inset ring-gray-300 dark:ring-gray-700 cursor-not-allowed">Next</span>
+      <% end %>
+    </div>
+  </nav>
+<% end %>

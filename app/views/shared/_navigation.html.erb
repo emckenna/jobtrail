@@ -42,32 +42,63 @@
 </nav>
 
 <script>
-  // Dark mode toggle functionality
-  const themeToggleBtn = document.getElementById('theme-toggle');
-  const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
-  const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
+  // Dark mode toggle functionality - Turbo compatible
+  (function() {
+    function initThemeToggle() {
+      const themeToggleBtn = document.getElementById('theme-toggle');
+      const themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
+      const themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
 
-  // Check for saved theme preference or default to light mode
-  if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    document.documentElement.classList.add('dark');
-    themeToggleLightIcon.classList.remove('hidden');
-  } else {
-    document.documentElement.classList.remove('dark');
-    themeToggleDarkIcon.classList.remove('hidden');
-  }
+      if (!themeToggleBtn) return;
 
-  themeToggleBtn.addEventListener('click', function() {
-    // Toggle icons
-    themeToggleDarkIcon.classList.toggle('hidden');
-    themeToggleLightIcon.classList.toggle('hidden');
+      // Apply saved theme on page load
+      function applyTheme() {
+        if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+          document.documentElement.classList.add('dark');
+          if (themeToggleLightIcon) themeToggleLightIcon.classList.remove('hidden');
+          if (themeToggleDarkIcon) themeToggleDarkIcon.classList.add('hidden');
+        } else {
+          document.documentElement.classList.remove('dark');
+          if (themeToggleDarkIcon) themeToggleDarkIcon.classList.remove('hidden');
+          if (themeToggleLightIcon) themeToggleLightIcon.classList.add('hidden');
+        }
+      }
 
-    // Toggle dark class on HTML element
-    if (document.documentElement.classList.contains('dark')) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('color-theme', 'light');
-    } else {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('color-theme', 'dark');
+      // Apply theme immediately
+      applyTheme();
+
+      // Remove any existing listeners to prevent duplicates
+      const newBtn = themeToggleBtn.cloneNode(true);
+      themeToggleBtn.parentNode.replaceChild(newBtn, themeToggleBtn);
+
+      // Add click listener to new button
+      newBtn.addEventListener('click', function() {
+        const darkIcon = document.getElementById('theme-toggle-dark-icon');
+        const lightIcon = document.getElementById('theme-toggle-light-icon');
+
+        // Toggle icons
+        darkIcon.classList.toggle('hidden');
+        lightIcon.classList.toggle('hidden');
+
+        // Toggle dark class on HTML element
+        if (document.documentElement.classList.contains('dark')) {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('color-theme', 'light');
+        } else {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('color-theme', 'dark');
+        }
+      });
     }
-  });
+
+    // Initialize on first load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initThemeToggle);
+    } else {
+      initThemeToggle();
+    }
+
+    // Reinitialize on Turbo navigation
+    document.addEventListener('turbo:load', initThemeToggle);
+  })();
 </script>

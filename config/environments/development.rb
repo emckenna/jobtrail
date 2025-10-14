@@ -23,6 +23,8 @@ Rails.application.configure do
     config.public_file_server.headers = { "cache-control" => "public, max-age=#{2.days.to_i}" }
   else
     config.action_controller.perform_caching = false
+    # Disable asset caching in development
+    config.public_file_server.headers = { "cache-control" => "no-cache, no-store, must-revalidate" }
   end
 
   # Change to :null_store to avoid any caching.
@@ -73,4 +75,8 @@ Rails.application.configure do
   # Allow VS Code tunnel hosts for development
   config.hosts << "2cc792p0-3000.use.devtunnels.ms"
   config.hosts << /[a-z0-9\-]+\.use\.devtunnels\.ms/ # Allow any VS Code tunnel
+  config.hosts << "localhost"
+
+  # Allow localhost origin for form submissions
+  config.action_controller.forgery_protection_origin_check = false
 end
