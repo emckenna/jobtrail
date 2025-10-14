@@ -81,10 +81,23 @@ namespace :data do
   def parse_date(date_string)
     return nil if date_string.blank?
 
-    # Try multiple date formats
+    # Handle 2-digit year format first (e.g., 8/19/25 -> 2025)
+    # Must check this BEFORE trying strptime with %Y format
+    if date_string.match?(%r{^\d{1,2}/\d{1,2}/\d{2}$})
+      parts = date_string.split('/')
+      month, day, year = parts[0].to_i, parts[1].to_i, parts[2].to_i
+      # Assume years 00-99 mean 2000-2099
+      full_year = year < 100 ? 2000 + year : year
+      begin
+        return Date.new(full_year, month, day)
+      rescue ArgumentError
+        # Invalid date, fall through to other formats
+      end
+    end
+
+    # Try other date formats
     formats = [
       '%m/%d/%Y',   # 8/19/2025
-      '%m/%d/%y',   # 8/19/25
       '%Y-%m-%d',   # 2025-08-19
       '%m/%d'       # 9/17 (assumes current year)
     ]
