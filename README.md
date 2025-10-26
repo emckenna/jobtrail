@@ -41,16 +41,16 @@ JobTrail provides:
 
 ## Tech Stack
 
-- **Backend**: Ruby on Rails 7.x
+- **Backend**: Ruby on Rails 8.x
 - **Frontend**: Hotwire (Turbo + Stimulus)
 - **Database**: PostgreSQL
 - **Styling**: Tailwind CSS
-- **Deployment**: Docker + Heroku (or similar)
+- **Deployment**: Docker + Kamal/Thruster
 
 ## Prerequisites
 
-- Ruby 3.x
-- Rails 7.x
+- Ruby 3.3+
+- Rails 8.x
 - PostgreSQL
 - Docker & Docker Compose (for containerized development)
 
@@ -60,7 +60,7 @@ JobTrail provides:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/jobtrail.git
+   git clone https://github.com/emckenna/jobtrail.git
    cd jobtrail
    ```
 
@@ -69,7 +69,13 @@ JobTrail provides:
    docker-compose up --build
    ```
 
-3. Create and setup the database:
+   This will:
+   - Start PostgreSQL database
+   - Install dependencies
+   - Start the Rails server with Tailwind CSS compilation
+   - The app will be available at [http://localhost:3000](http://localhost:3000)
+
+3. In a separate terminal, create and setup the database:
    ```bash
    docker-compose run web rails db:create db:migrate
    ```
@@ -78,8 +84,6 @@ JobTrail provides:
    ```bash
    docker-compose run web rails db:seed
    ```
-
-5. Visit [http://localhost:3000](http://localhost:3000)
 
 ### Local Development (Without Docker)
 
@@ -118,12 +122,25 @@ JobTrail provides:
 
 ## Importing Existing Data
 
-If you have an existing CSV file of job applications:
+A sample CSV file is provided at `sample-data.csv` showing the expected format.
 
-```bash
-# Place your CSV in the project root
-docker-compose run web rails import:job_applications[path/to/your/file.csv]
-```
+To import your own job applications data:
+
+1. Create a CSV file with the following columns:
+   - Company Name, Job Title, Application Link, Application Date, Status, Contact Name, Contact Email, Follow-Up Date, Notes
+
+2. Place your CSV file at `claude_artifacts/Job-Search.csv`
+
+3. Run the import task:
+   ```bash
+   # With Docker
+   docker-compose run web rails data:import_applications
+
+   # Without Docker
+   rails data:import_applications
+   ```
+
+**Supported Status values**: Applied, Screening, Rejected, Closed, Withdrawn
 
 ## Running Tests
 
@@ -137,11 +154,18 @@ rails test
 
 ## Deployment
 
-The application is containerized and ready for deployment to:
-- Heroku (with PostgreSQL addon)
-- AWS ECS/Fargate
-- DigitalOcean App Platform
-- Any Docker-compatible hosting
+The application includes production-ready Docker configuration and deployment tools:
+
+### Using Kamal (Recommended)
+The app includes Kamal for deployment to any server. See the [Kamal documentation](https://kamal-deploy.org/) for setup instructions.
+
+### Alternative Deployment Options
+- **AWS ECS/Fargate** - Use the production Dockerfile
+- **DigitalOcean App Platform** - Docker-based deployment
+- **Heroku** - Requires buildpack configuration (not included by default)
+- **Any VPS** - Manual Docker deployment or Kamal
+
+The production Dockerfile uses Thruster for HTTP caching and compression, serving on port 80.
 
 ## Project Status
 

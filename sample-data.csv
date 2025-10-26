@@ -1,0 +1,6 @@
+Company Name,Job Title,Application Link,Application Date,Status,Contact Name,Contact Email,Follow-Up Date,Notes
+Acme Corp,Senior Software Engineer,https://acme.com/careers/12345,1/15/25,Applied,Jane Smith,jane.smith@acme.com,1/22/25,Applied through company website
+TechStart Inc,Full Stack Developer,https://techstart.io/jobs/fs-dev,1/18/25,Screening,Bob Johnson,bob@techstart.io,1/25/25,Phone screen scheduled for next week
+DataFlow Systems,Backend Engineer,https://dataflow.com/careers/backend,1/20/25,Rejected,,,,"Rejected after initial review"
+CloudNine,DevOps Engineer,https://cloudnine.dev/jobs/123,1/22/25,Applied,,,,"Waiting to hear back"
+InnovateLabs,Software Engineer,https://innovatelabs.com/join/swe,1/25/25,Applied,Sarah Williams,sarah.w@innovatelabs.com,2/1/25,Referral from former colleague
